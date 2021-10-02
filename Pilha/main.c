@@ -9,17 +9,21 @@ struct pilha {
 
 typedef struct pilha PILHA;
 
-void estado(PILHA *end_pilha) {
-    PILHA p = *end_pilha;
-    printf("A\n");
-    for (int i = (MAX - 1); i >= 0; i--) {
-        if (i <= p.topo) {
-            printf("%d\n", p.corpo[i]);
-        } else {
-            printf("-\n");
+void estados(PILHA **end_end_pilhas) {
+    printf("A\tB\tC\n");
+    for (int i=MAX-1; i>=0; i--){
+        for (int ip=0; ip<3; ip++){
+            PILHA **end_end_pilha = &end_end_pilhas[ip];
+            PILHA p = **end_end_pilha;
+            if (i <= p.topo) {
+                printf("%d\t", p.corpo[i]);
+            } else {
+                printf("-\t");
+            }
         }
-        printf("");
+        printf("\n");
     }
+    printf("\n");
 }
 
 void coloca(PILHA *p, int n) {
@@ -42,6 +46,17 @@ int tira(PILHA *p) {
     return (n);
 }
 
+void hanoi(int n, PILHA* end_O, PILHA* end_D, PILHA* end_T, PILHA** estado){
+    if(n>0){
+        hanoi(n-1, end_O, end_T, end_D, estado);
+        int d = tira(end_O);
+        coloca(end_D, d);
+        estados(estado);
+        hanoi(n-1, end_T, end_D, end_O, estado);
+    }
+    return;
+}
+
 int main() {
     PILHA A, B, C;
     A.topo = -1;
@@ -49,10 +64,11 @@ int main() {
     C.topo = -1;
     coloca(&A, 5);
     coloca(&A, 10);
-    estado(&A);
+    estados(&A);
+
     printf("\n");
     int v = tira(&A);
     printf("v = %d\n\n", v);
-    estado(&A);
+    estados(&A);
     return 0;
 }
